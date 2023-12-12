@@ -1,0 +1,263 @@
+﻿@page "/branchCostCentres/{id:int}"
+
+@attribute [Authorize(EasiPosStockersPermissions.CostCentres.Default)]
+@using EasiPosStockers.Branches
+@using EasiPosStockers.CostCentres
+@using EasiPosStockers.Localization
+@using EasiPosStockers.Shared
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Extensions.Localization
+@using Microsoft.AspNetCore.Components.Web
+@using Blazorise
+@using Blazorise.Components
+@using Blazorise.DataGrid
+@using Volo.Abp.BlazoriseUI
+@using Volo.Abp.BlazoriseUI.Components
+@using Volo.Abp.ObjectMapping
+@using Volo.Abp.AspNetCore.Components.Messages
+@using Volo.Abp.AspNetCore.Components.Web.Theming.Layout
+@using EasiPosStockers.Permissions
+@using Microsoft.AspNetCore.Components
+@using Volo.Abp.AspNetCore.Components.Web
+@using Volo.Abp.Http.Client
+@inherits EasiPosStockersComponentBase
+@inject ICostCentresAppService CostCentresAppService
+@inject IBranchesAppService BranchAppService
+
+@inject IUiMessageService UiMessageService
+@inject IRemoteServiceConfigurationProvider RemoteServiceConfigurationProvider
+@inject NavigationManager NavigationManager
+
+@* ************************* PAGE HEADER ************************* *@
+<PageHeader Title="@L["Branches"]" BreadcrumbItems="BreadcrumbItems" Toolbar="Toolbar">
+
+</PageHeader>
+@* <PageTitle Title = @input.Id ></PageTitle> *@
+
+@* ************************* SEARCH ************************* *@
+
+@* ************************* DATA GRID ************************* *@
+<Card>
+    <CardBody>
+        <DataGrid TItem="CostCentreWithNavigationPropertiesDto"
+                  Data="CostCentreList"
+                  ReadData="OnDataGridReadAsync"
+                  TotalItems="TotalCount"
+                  ShowPager="true"
+                  Responsive="true"
+                  PageSize="PageSize"
+                  Class="datagrid-detail">
+            <DataGridColumns>
+
+                <DataGridEntityActionsColumn TItem="CostCentreWithNavigationPropertiesDto" @ref="@EntityActionsColumn">
+                    <DisplayTemplate>
+                        <EntityActions TItem="CostCentreWithNavigationPropertiesDto" EntityActionsColumn="@EntityActionsColumn">
+                            <EntityAction TItem="CostCentreWithNavigationPropertiesDto"
+                                          Visible="@CanEditCostCentre"
+                                          Clicked="async () => await OpenEditCostCentreModalAsync(context)"
+                                          Text="@L["Edit"]"></EntityAction>
+                            <EntityAction TItem="CostCentreWithNavigationPropertiesDto"
+                                          Visible="@CanDeleteCostCentre"
+                                          Clicked="() => DeleteCostCentreAsync(context)"
+                                          ConfirmationMessage="@(()=> L["DeleteConfirmationMessage"])"
+                                          Text="@L["Delete"]"></EntityAction>
+                            @*//<suite-custom-code-block-4>*@
+                            @*//</suite-custom-code-block-4>*@
+                        </EntityActions>
+                    </DisplayTemplate>
+                </DataGridEntityActionsColumn>
+
+                <DataGridColumn TItem="CostCentreWithNavigationPropertiesDto"
+                                Field="CostCentre.CostCentreReference"
+                                Caption="@L["CostCentreReference"]">
+                </DataGridColumn>
+
+                <DataGridColumn TItem="CostCentreWithNavigationPropertiesDto"
+                                Field="CostCentre.CostCentreName"
+                                Caption="@L["CostCentreName"]">
+                </DataGridColumn>
+
+                <DataGridColumn TItem="CostCentreWithNavigationPropertiesDto"
+                                Field="CostCentre.IsDisabled"
+                                Caption="@L["IsDisabled"]">
+                    <DisplayTemplate>
+                        @if (context.CostCentre.IsDisabled)
+                        {
+                            <Icon TextColor="TextColor.Success" Name="@IconName.Check" />
+                        }
+                        else
+                        {
+                            <Icon TextColor="TextColor.Danger" Name="@IconName.Times" />
+                        }
+                    </DisplayTemplate>
+                </DataGridColumn>
+
+
+                <DataGridColumn TItem="CostCentreWithNavigationPropertiesDto"
+                                Field="Branch.BranchName"
+                                Caption="@L["Branch"]">
+                </DataGridColumn>
+
+            </DataGridColumns>
+
+
+        </DataGrid>
+    </CardBody>
+</Card>
+
+@* ************************* CREATE MODAL ************************* *@
+<Modal @ref="CreateCostCentreModal" Closing="@CreateCostCentreModal.CancelClosingModalWhenFocusLost">
+    <ModalContent Centered="true">
+        @*//<suite-custom-code-block-5>*@
+        @*//</suite-custom-code-block-5>*@
+        <Form id="CreateCostCentreForm">
+            <ModalHeader>
+                <ModalTitle>@L["NewCostCentre"]</ModalTitle>
+                    <CloseButton Clicked="CloseCreateCostCentreModalAsync" />
+                </ModalHeader>
+                <ModalBody>
+                    <Validations @ref="@NewCostCentreValidations"
+                                 Mode="ValidationMode.Auto"
+                                 Model="@NewCostCentre"
+                                 ValidateOnLoad="false">
+
+
+                        <Validation>
+                            <Field>
+                                <FieldLabel>@L["CostCentreReference"] *</FieldLabel>
+                            <TextEdit @bind-Text="@NewCostCentre.CostCentreReference" MaxLength="CostCentreConsts.CostCentreReferenceMaxLength">
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["CostCentreName"] *</FieldLabel>
+                            <TextEdit @bind-Text="@NewCostCentre.CostCentreName" MaxLength="CostCentreConsts.CostCentreNameMaxLength">
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Field>
+                        <Check TValue="bool" @bind-Checked="@NewCostCentre.IsDisabled">@L["IsDisabled"]</Check>
+                        </Field>
+
+                        <Field>
+                            <FieldLabel>@L["Branch"]</FieldLabel>
+                            <Select TValue="Guid?" @bind-SelectedValue="@NewCostCentre.BranchId">
+                                <SelectItem TValue="Guid?" Value="null"></SelectItem>
+                                @foreach (var branch in BranchesCollection)
+                            {
+                                <SelectItem TValue="Guid?" Value="@branch.Id">
+                                    @branch.DisplayName
+                                </SelectItem>
+                            }
+                        </Select>
+                    </Field>
+
+
+
+
+                </Validations>
+            </ModalBody>
+            <ModalFooter>
+                <Button Color="Color.Secondary"
+                        Clicked="CloseCreateCostCentreModalAsync">
+                    @L["Cancel"]
+                </Button>
+                <SubmitButton Form="CreateCostCentreForm" Clicked="CreateCostCentreAsync" />
+                @*//<suite-custom-code-block-6>*@
+                @*//</suite-custom-code-block-6>*@
+            </ModalFooter>
+        </Form>
+        @*//<suite-custom-code-block-7>*@
+        @*//</suite-custom-code-block-7>*@
+    </ModalContent>
+</Modal>
+
+@* ************************* EDIT MODAL ************************* *@
+<Modal @ref="EditCostCentreModal" Closing="@EditCostCentreModal.CancelClosingModalWhenFocusLost">
+    <ModalContent Centered="true">
+        @*//<suite-custom-code-block-8>*@
+        @*//</suite-custom-code-block-8>*@
+        <Form id="EditCostCentreForm">
+            <ModalHeader>
+                <ModalTitle>@L["Update"]</ModalTitle>
+                    <CloseButton Clicked="CloseEditCostCentreModalAsync" />
+                </ModalHeader>
+                <ModalBody>
+                    <Validations @ref="@EditingCostCentreValidations"
+                                 Mode="ValidationMode.Auto"
+                                 Model="@EditingCostCentre"
+                                 ValidateOnLoad="false">
+
+
+                        <Validation>
+                            <Field>
+                                <FieldLabel>@L["CostCentreReference"] *</FieldLabel>
+                            <TextEdit @bind-Text="@EditingCostCentre.CostCentreReference" MaxLength="CostCentreConsts.CostCentreReferenceMaxLength">
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["CostCentreName"] *</FieldLabel>
+                            <TextEdit @bind-Text="@EditingCostCentre.CostCentreName" MaxLength="CostCentreConsts.CostCentreNameMaxLength">
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Field>
+                        <Check TValue="bool" @bind-Checked="@EditingCostCentre.IsDisabled">@L["IsDisabled"]</Check>
+                        </Field>
+
+                        <Field>
+                            <FieldLabel>@L["Branch"]</FieldLabel>
+                            <Select TValue="Guid?" @bind-SelectedValue="@EditingCostCentre.BranchId">
+                                <SelectItem TValue="Guid?" Value="null"></SelectItem>
+                                @foreach (var branch in BranchesCollection)
+                            {
+                                <SelectItem TValue="Guid?" Value="@branch.Id">
+                                    @branch.DisplayName
+                                </SelectItem>
+                            }
+                        </Select>
+                    </Field>
+
+
+
+
+                </Validations>
+            </ModalBody>
+            <ModalFooter>
+                <Button Color="Color.Secondary"
+                        Clicked="CloseEditCostCentreModalAsync">
+                    @L["Cancel"]
+                </Button>
+                <SubmitButton Form="EditCostCentreForm" Clicked="UpdateCostCentreAsync" />
+                @*//<suite-custom-code-block-9>*@
+                @*//</suite-custom-code-block-9>*@
+            </ModalFooter>
+        </Form>
+        @*//<suite-custom-code-block-10>*@
+        @*//</suite-custom-code-block-10>*@
+    </ModalContent>
+</Modal>
+
