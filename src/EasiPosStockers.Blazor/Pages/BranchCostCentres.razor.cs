@@ -17,8 +17,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace EasiPosStockers.Blazor.Pages
 {
-    //[parameter]
-    //private Guid? brId { get; set; }
+    
     public partial class BranchCostCentres
     {
         protected List<Volo.Abp.BlazoriseUI.BreadcrumbItem> BreadcrumbItems = new List<Volo.Abp.BlazoriseUI.BreadcrumbItem>();
@@ -71,9 +70,9 @@ namespace EasiPosStockers.Blazor.Pages
             await SetPermissionsAsync();
             await GetBranchCollectionLookupAsync();
 
-
-
         }
+
+     
 
         protected virtual ValueTask SetBreadcrumbItemsAsync()
         {
@@ -249,15 +248,18 @@ namespace EasiPosStockers.Blazor.Pages
         }
         protected virtual async Task OnBranchIdChangedAsync(Guid? branchId)
         {
-            Filter.BranchId = branchId;
-            await SearchAsync();
-        }
+          
+                Filter.BranchId = branchId;
+                await SearchAsync();
+               
+            }
 
 
         private async Task GetBranchCollectionLookupAsync(string? newValue = null)
         {
             BranchesCollection = (await CostCentresAppService.GetBranchLookupAsync(new LookupRequestDto { Filter = newValue })).Items;
         }
+
 
 
 

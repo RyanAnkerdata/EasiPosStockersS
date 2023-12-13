@@ -250,8 +250,10 @@ namespace EasiPosStockers.Blazor.Pages
             NavigationManager.NavigateTo($"/branchCostCentres/{id}");
 
 
-            Console.WriteLine("----------------------Opening branch centers with id:" + input.Id);
+            
         }
+
+
 
 
 

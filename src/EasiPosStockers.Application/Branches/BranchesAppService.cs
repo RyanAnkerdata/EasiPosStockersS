@@ -17,11 +17,14 @@ using Volo.Abp.Authorization;
 using Volo.Abp.Caching;
 using Microsoft.Extensions.Caching.Distributed;
 using EasiPosStockers.Shared;
+using AutoMapper;
+using Polly;
 
 namespace EasiPosStockers.Branches
 {
     [RemoteService(IsEnabled = false)]
     [Authorize(EasiPosStockersPermissions.Branches.Default)]
+
     public abstract class BranchesAppServiceBase : ApplicationService
     {
         protected IDistributedCache<BranchExcelDownloadTokenCacheItem, string> _excelDownloadTokenCache;
@@ -116,5 +119,29 @@ namespace EasiPosStockers.Branches
                 Token = token
             };
         }
+
+
+        public async Task<Branch> GetBranchByIdAsync(Guid id)
+        {
+
+           Console.WriteLine("----------this is calling the task like it should ");
+            var branch = await _branchRepository.GetAsync(id);
+            Console.WriteLine("----------this is calling the task like it should " + branch);
+            return branch;
+
+
+
+
+            //return await _branchRepository.GetAsync(id)
+            //   .Include(q => q.Author)
+            //   .ProjectTo<BranchDto>(mapper.ConfigurationProvider)
+            //   .FirstOrDefaultAsync(q => q.Id == id);
+
+
+        }
+
+
+
+
     }
 }
