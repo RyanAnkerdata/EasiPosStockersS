@@ -71,6 +71,7 @@
     "Menu:Products": "Products",
     "Product": "Product",
     "CostCentre": "Cost centre",
-    "Branch": "Branch"
+    "Branch": "Branch",
+    "CostCentreAllocations": "Cost Centre Allocations"
   }
 }

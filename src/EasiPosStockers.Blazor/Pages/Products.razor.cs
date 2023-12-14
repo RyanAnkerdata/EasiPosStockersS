@@ -180,6 +180,8 @@ namespace EasiPosStockers.Blazor.Pages
             await GetProductsAsync();
         }
 
+
+        // Original CreateProductAsync()
         private async Task CreateProductAsync()
         {
             try
@@ -200,6 +202,32 @@ namespace EasiPosStockers.Blazor.Pages
                 await HandleErrorAsync(ex);
             }
         }
+
+        // Adjusted CreateProductAsync() Method
+        private async Task CreateProductAsync(Dictionary<Guid, bool> costCentreSelections)
+        {
+            try
+            {
+                if (await NewProductValidations.ValidateAll() == false)
+                {
+                    return;
+                }
+                
+                NewProduct.CostCentreIds = costCentreSelections
+                    .Where(pair => pair.Value) // Filter where the value is true
+                    .Select(pair => pair.Key)  // Select the Guid (the key in the dictionary)
+                    .ToList();
+
+                await ProductsAppService.CreateAsync(NewProduct);
+                await GetProductsAsync();
+                await CloseCreateProductModalAsync();
+            }
+            catch (Exception ex)
+            {
+                await HandleErrorAsync(ex);
+            }
+        }
+
 
         private async Task CloseEditProductModalAsync()
         {
@@ -253,6 +281,10 @@ namespace EasiPosStockers.Blazor.Pages
             await SearchAsync();
         }
         
+        private async Task GetAllCostCentresAsync() // Added
+        {
+            CostCentres = (await ProductsAppService.GetCostCentreLookupAsync(new LookupRequestDto { Filter = "" })).Items;
+        }
 
         private async Task GetCostCentreLookupAsync(string? newValue = null)
         {
