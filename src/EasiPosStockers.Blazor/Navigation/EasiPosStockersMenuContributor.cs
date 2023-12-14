@@ -15,7 +15,7 @@ using Volo.Abp.UI.Navigation;
 using Volo.Abp.Authorization.Permissions;
 using Volo.Abp.OpenIddict.Pro.Blazor.Menus;
 using Volo.Saas.Host.Blazor.Navigation;
-
+using Blazorise.Icons.FontAwesome;
 namespace EasiPosStockers.Blazor.Navigation;
 
 public class EasiPosStockersMenuContributor : IMenuContributor
@@ -74,26 +74,24 @@ public class EasiPosStockersMenuContributor : IMenuContributor
         );
 
 
-
-
         context.Menu.AddItem(
-    new ApplicationMenuItem("Menu0", "Branches")
-        .AddItem(
-            new ApplicationMenuItem("Menu0.1", "Branch 1", url: "/test021")
-                .AddItem(new ApplicationMenuItem("Menu0.1.1", "Cost Center 1", url: "/test021"))
-                .AddItem(new ApplicationMenuItem("Menu0.1.2", "Cost Center 2", url: "/test021"))
-        )
-        .AddItem(
-            new ApplicationMenuItem("Menu0.2", "Branch 2", url: "/test021")
-                .AddItem(new ApplicationMenuItem("Menu0.2.1", "Cost Center 1", url: "/test021"))
-                .AddItem(new ApplicationMenuItem("Menu0.2.2", "Cost Center 2", url: "/test021"))
-        )
-        .AddItem(
-            new ApplicationMenuItem("Menu0.3", "Branch 3", url: "/test021")
-                .AddItem(new ApplicationMenuItem("Menu0.3.1", "Cost Center 1", url: "/test021"))
-                .AddItem(new ApplicationMenuItem("Menu0.3.2", "Cost Center 2", url: "/test021"))
-        )
-);
+        new ApplicationMenuItem("Menu0", "Branches")
+            .AddItem(
+                new ApplicationMenuItem("Menu0.1", "Branch 1", url: "/test021")
+                    .AddItem(new ApplicationMenuItem("Menu0.1.1", "Cost Center 1", url: "/test021"))
+                    .AddItem(new ApplicationMenuItem("Menu0.1.2", "Cost Center 2", url: "/test021"))
+            )
+            .AddItem(
+                new ApplicationMenuItem("Menu0.2", "Branch 2", url: "/test021")
+                    .AddItem(new ApplicationMenuItem("Menu0.2.1", "Cost Center 1", url: "/test021"))
+                    .AddItem(new ApplicationMenuItem("Menu0.2.2", "Cost Center 2", url: "/test021"))
+            )
+            .AddItem(
+                new ApplicationMenuItem("Menu0.3", "Branch 3", url: "/test021")
+                    .AddItem(new ApplicationMenuItem("Menu0.3.1", "Cost Center 1", url: "/test021"))
+                    .AddItem(new ApplicationMenuItem("Menu0.3.2", "Cost Center 2", url: "/test021"))
+            )
+        );
 
 
         context.Menu.SetSubItemOrder(SaasHostMenus.GroupName, 3);
@@ -125,7 +123,7 @@ public class EasiPosStockersMenuContributor : IMenuContributor
                 EasiPosStockersMenus.Branches,
                 l["Menu:Branches"],
                 url: "/branches",
-                icon: "fa fa-file-alt",
+                icon: "fas fa-code-branch",
                 requiredPermissionName: EasiPosStockersPermissions.Branches.Default)
         );
 
@@ -134,7 +132,7 @@ public class EasiPosStockersMenuContributor : IMenuContributor
                 EasiPosStockersMenus.CostCentres,
                 l["Menu:CostCentres"],
                 url: "/cost-centres",
-                icon: "fa fa-file-alt",
+                icon: "fas fa-boxes",
                 requiredPermissionName: EasiPosStockersPermissions.CostCentres.Default)
         );
 
@@ -143,7 +141,7 @@ public class EasiPosStockersMenuContributor : IMenuContributor
                 EasiPosStockersMenus.Products,
                 l["Menu:Products"],
                 url: "/products",
-                icon: "fa fa-file-alt",
+                icon: "fas fa-tags",
                 requiredPermissionName: EasiPosStockersPermissions.Products.Default)
         );
         return Task.CompletedTask;

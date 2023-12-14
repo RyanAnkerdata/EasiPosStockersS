@@ -42,9 +42,8 @@ namespace EasiPosStockers.Blazor.Pages
         private CostCentreWithNavigationPropertiesDto? SelectedCostCentre;
         private IReadOnlyList<LookupDto<Guid>> BranchesCollection { get; set; } = new List<LookupDto<Guid>>();
 
-        
-        
-        
+        private bool IsChecked = false;
+
         public CostCentres()
         {
             NewCostCentre = new CostCentreCreateDto();

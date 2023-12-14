@@ -26,6 +26,8 @@ using Volo.Abp.OpenIddict.Pro.Blazor.WebAssembly;
 using Volo.Abp.SettingManagement.Blazor.WebAssembly;
 using Volo.Abp.TextTemplateManagement.Blazor.WebAssembly;
 using Volo.Saas.Host.Blazor.WebAssembly;
+using Volo.Abp.Localization;
+using EasiPosStockers.Localization;
 
 
 namespace EasiPosStockers.Blazor;
@@ -77,6 +79,8 @@ public class EasiPosStockersBlazorModule : AbpModule
         Configure<LeptonXThemeOptions>(options =>
         {
             options.DefaultStyle = LeptonXStyleNames.System;
+            options.Styles.Add("Blue", new LeptonXThemeStyle(
+                LocalizableString.Create<EasiPosStockersResource>("Blue"), "fa fa-water"));
         });
     }
 
