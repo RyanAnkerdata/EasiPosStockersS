@@ -1,0 +1,16 @@
+﻿@using Volo.Abp.AspNetCore.Components.Web.LeptonXTheme.Components.ApplicationLayout.SideMenu.MainHeader
+@using Volo.Abp.DependencyInjection
+
+@inherits MainHeaderBranding
+@attribute [ExposeServices(typeof(MainHeaderBranding))]
+@attribute [Dependency(ReplaceServices = true)]
+
+<div style="display: flex; align-items: center;">
+    <img src="@LogoUrl" alt="Logo" style="width: 40px; height: 40px; margin-right: 10px;" />
+    <b>@AppName</b>
+</div>
+
+@code {
+    public string AppName = "EasiposStock";
+    public string LogoUrl = "favicon.ico";
+}

@@ -49,7 +49,7 @@ namespace EasiPosStockers.Products
                 return;
             }
 
-            CostCentres.Add(new ProductCostCentre(Id, costCentreId));
+            CostCentres.Add(new ProductCostCentre(Id, costCentreId)); // THIS IS KEY!!
         }
 
         public virtual void RemoveCostCentre(Guid costCentreId)

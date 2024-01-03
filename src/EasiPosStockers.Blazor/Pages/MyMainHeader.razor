@@ -1,0 +1,50 @@
+﻿@*
+@using Volo.Abp.AspNetCore.Components.Web.LeptonXTheme.Components.ApplicationLayout.SideMenu.MainHeader
+@using Volo.Abp.DependencyInjection
+@using Volo.Abp.Ui.Branding
+
+
+@inherits MainHeader
+@attribute [ExposeServices(typeof(MainHeader))]
+@attribute [Dependency(ReplaceServices = true)]
+
+
+Home - "/"
+
+Dashboard - "/HostDashboard"
+
+SAAS:
+    -> Tenants - "/saas/host/tenants"
+    -> Editions - "/saas/host/editions"
+
+Administration:
+    ->Identity Management:
+        * Organization Units - /identity/organization-units
+        * Roles - /identity/roles
+        * Users - /identity/users
+        * Claim Types - /identity/claim-types
+        * Security Logs - /identity/security-logs
+
+    -> OpenId:
+        * Applications - "/openIddict/Applications"
+        * Scopes - "/openIddict/Scopes
+
+    ->Language Management:
+        * Languages - "/language-management/languages"
+        * Language Texts - "/language-management/texts"
+
+    -> Text Templates - "/text-templates"
+
+    -> Audit Logs - "audit-logs"
+
+    -> Settings - "/setting-management"
+
+Branches - "/Branches"
+
+CostCentres - "/CostCentres"
+
+Products - "/Products"
+
+*@
+
+

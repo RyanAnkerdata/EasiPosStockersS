@@ -24,8 +24,7 @@ namespace EasiPosStockers.Products
         }
 
         public virtual async Task<Product> CreateAsync(
-        List<Guid> costCentreIds,
-        string description, string productName)
+                List<Guid> costCentreIds, string description, string productName)
         {
             Check.NotNullOrWhiteSpace(description, nameof(description));
             Check.Length(description, nameof(description), ProductConsts.DescriptionMaxLength);
@@ -39,15 +38,13 @@ namespace EasiPosStockers.Products
 
             await SetCostCentresAsync(product, costCentreIds);
 
-            return await _productRepository.InsertAsync(product);
+            return await _productRepository.InsertAsync(product); // This deals with the product/costcentre db relationship
         }
 
         public virtual async Task<Product> UpdateAsync(
-            Guid id,
-            List<Guid> costCentreIds,
-        string description, string productName, [CanBeNull] string? concurrencyStamp = null
-        )
+                Guid id, List<Guid> costCentreIds, string description, string productName, [CanBeNull] string? concurrencyStamp = null)
         {
+
             Check.NotNullOrWhiteSpace(description, nameof(description));
             Check.Length(description, nameof(description), ProductConsts.DescriptionMaxLength);
             Check.NotNullOrWhiteSpace(productName, nameof(productName));
@@ -61,10 +58,15 @@ namespace EasiPosStockers.Products
             product.Description = description;
             product.ProductName = productName;
 
+            /*// Remove unnecessary cost centres
+            var costCentresToRemove = product.CostCentres.Where(cc => !costCentreIds.Contains(cc.CostCentreId)).ToList();
+            foreach (var costCentre in costCentresToRemove)
+            {
+                await _productRepository.DeleteAsync(x => x.Id == costCentre.CostCentreId);
+            }*/
             await SetCostCentresAsync(product, costCentreIds);
-
             product.SetConcurrencyStampIfNotNull(concurrencyStamp);
-            return await _productRepository.UpdateAsync(product);
+            return await _productRepository.InsertAsync(product); // This is where the update internal error occurs!! It has not changed the db at this point.
         }
 
         private async Task SetCostCentresAsync(Product product, List<Guid> costCentreIds)
@@ -93,5 +95,20 @@ namespace EasiPosStockers.Products
             }
         }
 
+        // Delete all the costcentres not present in the costCentreIds list for the given product
+        private async Task DeleteProductCostCentreRelation(Product product, List<Guid> costCentreIds)
+        {
+
+            product.RemoveAllCostCentres();
+
+            var query = (await _costCentreRepository.GetQueryableAsync())
+                .Where(x => costCentreIds.Contains(x.Id))
+                .Select(x => x.Id);
+
+            foreach (var costCentreId in costCentreIds)
+            {
+                product.AddCostCentre(costCentreId);
+            }
+        }
     }
 }

@@ -72,6 +72,9 @@
     "Product": "Product",
     "CostCentre": "Cost centre",
     "Branch": "Branch",
-    "CostCentreAllocations": "Cost Centre Allocations"
+    "CostCentreAllocations": "Cost Centre Allocations",
+    "OpenCostCentres": "Open Cost Centres",
+    "OpenProducts": "Open Products"
+
   }
 }

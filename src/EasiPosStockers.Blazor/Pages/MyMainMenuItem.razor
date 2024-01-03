@@ -1,0 +1,8 @@
+﻿@* 
+    @using Volo.Abp.AspNetCore.Components.Web.LeptonXTheme.Components.ApplicationLayout.SideMenu.Navigation;
+@using Volo.Abp.DependencyInjection
+
+@inherits MainMenuItem
+@attribute [ExposeServices(typeof(MainMenuItem))]
+@attribute [Dependency(ReplaceServices = true)]
+ *@

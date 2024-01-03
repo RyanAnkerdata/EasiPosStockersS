@@ -1,69 +1,78 @@
 ﻿@page "/"
 @inherits EasiPosStockersComponentBase
 
+<style>
+    .background-container {
+        height: 50vh;
+        background: url('background.png') center/cover no-repeat; /* Adjust as needed */
+        background-size: contain; /* Ensure the image fits within the container */
+    }
 
-<div style="margin-left: auto; margin-right: auto; text-align: center">
-    <h1 class="underline">
-        Welcome to EasiposStock
-    </h1>
+    .overlay {
+        position: relative;
+        z-index: 1; /* Ensure the overlay is above the background */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: white; /* Adjust text color as needed */
+    }
+
+    h1 {
+        font-size: 48px;
+        letter-spacing: 3px;
+        margin: 20px 0;
+        color: gray;
+    }
+
+    .underline {
+        position: relative;
+        &:hover, &:focus, &:active
+
+    {
+        cursor: pointer;
+        &:after
+
+    {
+        width: 100%;
+    }
+
+    }
+
+    &:after {
+        content: '';
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: -3px;
+        height: 3px;
+        background-color: gray;
+        width: 0;
+        transition: width .4s;
+    }
+
+    }
+</style>
+
+
+<div class="overlay"><h1 class="underline">Welcome to EasiposStock</h1></div>
+<></>
+<div class="background-container"></div>
+
+<div class="overlay">
     <small>YOUR STOCK MANAGEMENT SYSTEM</small>
     <br />
-</div>
-<br />
-<br />
+    <br/>
+    @if (!CurrentUser.IsAuthenticated)
+    {
+        <h2>
+            Keen to get started?
+        </h2>
+        <br />
 
-@if (!CurrentUser.IsAuthenticated)
-{
-    <h2>
-        Keen to get started?
-    </h2>
-    <a href="/authentication/login" class="btn btn-primary mb-1">
-        @L["Login"]
-    </a>
-}
-
-<body>
-
-</body>
-
-<style>
-
-
-* {
-box-sizing: border-box;
-}
-
-@@import url(https://fonts.googleapis.com/css?family=PT+Sans);
-
-h1 {
-    text-align: center;
-    font-size: 48px;
-    letter-spacing: 3px;
-    margin: 20px 0;
-}
-
-.underline {
-  position: relative;
-  
-  &:hover,
-  &:focus,
-  &:active {
-    cursor: pointer;
-    &:after {
-      width: 100%;
+        <a href="/authentication/login" class="btn btn-primary mb-1">
+            @L["Login"]
+        </a>
     }
-  }
-  
-  &:after {
-    content: '';
-    position: absolute;
-    left: 50%; 
-    transform: translateX(-50%); 
-    bottom: -3px;
-    height: 3px;
-        background-color: dodgerblue;
-        width: 0;
-    transition: width .4s;
-  }
-}
-</style>
+</div>

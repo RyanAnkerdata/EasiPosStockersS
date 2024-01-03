@@ -10,7 +10,7 @@ namespace EasiPosStockers.Products
     {
         public string Description { get; set; } = null!;
         public string ProductName { get; set; } = null!;
-
+        public List<Guid> CostCentreIds { get; set; }
         public string ConcurrencyStamp { get; set; } = null!;
 
     }

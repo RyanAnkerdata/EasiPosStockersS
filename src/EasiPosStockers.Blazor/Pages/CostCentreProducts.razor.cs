@@ -1,4 +1,4 @@
-using System;
+﻿/*using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,36 +15,10 @@ using EasiPosStockers.Shared;
 
 namespace EasiPosStockers.Blazor.Pages
 {
-    public partial class CostCentres
+    public partial class CostCentreProducts
     {
-        protected List<Volo.Abp.BlazoriseUI.BreadcrumbItem> BreadcrumbItems = new List<Volo.Abp.BlazoriseUI.BreadcrumbItem>();
-        protected PageToolbar Toolbar {get;} = new PageToolbar();
-        protected bool ShowAdvancedFilters { get; set; }
-        private IReadOnlyList<CostCentreWithNavigationPropertiesDto> CostCentreList { get; set; }
-        private int PageSize { get; } = LimitedResultRequestDto.DefaultMaxResultCount;
-        private int CurrentPage { get; set; } = 1;
-        private string CurrentSorting { get; set; } = string.Empty;
-        private int TotalCount { get; set; }
-        private bool CanCreateCostCentre { get; set; }
-        private bool CanEditCostCentre { get; set; }
-        private bool CanDeleteCostCentre { get; set; }
-        private CostCentreCreateDto NewCostCentre { get; set; }
-        private Validations NewCostCentreValidations { get; set; } = new();
-        private CostCentreUpdateDto EditingCostCentre { get; set; }
-        private Validations EditingCostCentreValidations { get; set; } = new();
-        private Guid EditingCostCentreId { get; set; }
-        private Modal CreateCostCentreModal { get; set; } = new();
-        private Modal EditCostCentreModal { get; set; } = new();
-        private GetCostCentresInput Filter { get; set; }
-        private DataGridEntityActionsColumn<CostCentreWithNavigationPropertiesDto> EntityActionsColumn { get; set; } = new();
-        protected string SelectedCreateTab = "costCentre-create-tab";
-        protected string SelectedEditTab = "costCentre-edit-tab";
-        private CostCentreWithNavigationPropertiesDto? SelectedCostCentre;
-        private IReadOnlyList<LookupDto<Guid>> BranchesCollection { get; set; } = new List<LookupDto<Guid>>();
 
-        private bool IsChecked = false;
-
-        public CostCentres()
+        public CostCentre()
         {
             NewCostCentre = new CostCentreCreateDto();
             EditingCostCentre = new CostCentreUpdateDto();
@@ -73,8 +47,8 @@ namespace EasiPosStockers.Blazor.Pages
 
         protected virtual ValueTask SetToolbarItemsAsync()
         {
-            Toolbar.AddButton(L["ExportToExcel"], async () =>{ await DownloadAsExcelAsync(); }, IconName.Download);
-            
+            Toolbar.AddButton(L["ExportToExcel"], async () => { await DownloadAsExcelAsync(); }, IconName.Download);
+
             Toolbar.AddButton(L["NewCostCentre"], async () =>
             {
                 await OpenCreateCostCentreModalAsync();
@@ -91,8 +65,8 @@ namespace EasiPosStockers.Blazor.Pages
                             .IsGrantedAsync(EasiPosStockersPermissions.CostCentres.Edit);
             CanDeleteCostCentre = await AuthorizationService
                             .IsGrantedAsync(EasiPosStockersPermissions.CostCentres.Delete);
-                            
-                            
+
+
         }
 
         private async Task GetCostCentresAsync()
@@ -113,7 +87,7 @@ namespace EasiPosStockers.Blazor.Pages
             await InvokeAsync(StateHasChanged);
         }
 
-        private  async Task DownloadAsExcelAsync()
+        private async Task DownloadAsExcelAsync()
         {
             var token = (await CostCentresAppService.GetDownloadTokenAsync()).Token;
             var remoteService = await RemoteServiceConfigurationProvider.GetConfigurationOrDefaultOrNullAsync("EasiPosStockers") ??
@@ -134,9 +108,10 @@ namespace EasiPosStockers.Blazor.Pages
 
         private async Task OpenCreateCostCentreModalAsync()
         {
-            NewCostCentre = new CostCentreCreateDto{
-                
-                
+            NewCostCentre = new CostCentreCreateDto
+            {
+
+
             };
             await NewCostCentreValidations.ClearAll();
             await CreateCostCentreModal.Show();
@@ -144,9 +119,10 @@ namespace EasiPosStockers.Blazor.Pages
 
         private async Task CloseCreateCostCentreModalAsync()
         {
-            NewCostCentre = new CostCentreCreateDto{
-                
-                
+            NewCostCentre = new CostCentreCreateDto
+            {
+
+
             };
             await CreateCostCentreModal.Hide();
         }
@@ -154,7 +130,7 @@ namespace EasiPosStockers.Blazor.Pages
         private async Task OpenEditCostCentreModalAsync(CostCentreWithNavigationPropertiesDto input)
         {
             var costCentre = await CostCentresAppService.GetWithNavigationPropertiesAsync(input.CostCentre.Id);
-            
+
             EditingCostCentreId = costCentre.CostCentre.Id;
             EditingCostCentre = ObjectMapper.Map<CostCentreDto, CostCentreUpdateDto>(costCentre.CostCentre);
             await EditingCostCentreValidations.ClearAll();
@@ -202,7 +178,7 @@ namespace EasiPosStockers.Blazor.Pages
 
                 await CostCentresAppService.UpdateAsync(EditingCostCentreId, EditingCostCentre);
                 await GetCostCentresAsync();
-                await EditCostCentreModal.Hide();                
+                await EditCostCentreModal.Hide();
             }
             catch (Exception ex)
             {
@@ -240,7 +216,7 @@ namespace EasiPosStockers.Blazor.Pages
             Filter.BranchId = branchId;
             await SearchAsync();
         }
-        
+
 
         private async Task GetBranchCollectionLookupAsync(string? newValue = null)
         {
@@ -270,3 +246,4 @@ namespace EasiPosStockers.Blazor.Pages
 
     }
 }
+*/

@@ -1,0 +1,97 @@
+﻿@page "/costCentreProducts/{id}/{costCentreReference}/{costCentreName}/{isDisabled}/{branchName}/{concurrencyStamp}"
+
+@attribute [Authorize(EasiPosStockersPermissions.CostCentres.Default)]
+@attribute [Authorize(EasiPosStockersPermissions.Products.Default)]
+@using EasiPosStockers.Products
+@using EasiPosStockers.CostCentres
+@using EasiPosStockers.Localization
+@using EasiPosStockers.Shared
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Extensions.Localization
+@using Microsoft.AspNetCore.Components.Web
+@using Blazorise
+@using Blazorise.Components
+@using Blazorise.DataGrid
+@using Volo.Abp.BlazoriseUI
+@using Volo.Abp.BlazoriseUI.Components
+@using Volo.Abp.ObjectMapping
+@using Volo.Abp.AspNetCore.Components.Messages
+@using Volo.Abp.AspNetCore.Components.Web.Theming.Layout
+@using EasiPosStockers.Permissions
+@using Microsoft.AspNetCore.Components
+@using Volo.Abp.AspNetCore.Components.Web
+@using Volo.Abp.Http.Client
+@inherits EasiPosStockersComponentBase
+@inject ICostCentresAppService CostCentresAppService
+@inject IProductsAppService ProductsAppService
+
+@inject IUiMessageService UiMessageService
+@inject IRemoteServiceConfigurationProvider RemoteServiceConfigurationProvider
+@inject NavigationManager NavigationManager
+
+
+<Card>
+    <CardBody>
+        <div><h1>@costCentreName - Cost Centre Details</h1></div>
+        <br/>
+        <hr>
+        <div>
+            <p><b>Id:</b>                   @id</p>
+            <p><b>Disabled:</b>             @isDisabled</p>
+            <p><b>Branch:</b>               @branchName</p>
+            <p><b>Concurrency Stamp:</b>    @concurrencyStamp</p>
+        </div>
+
+        @* <DataGrid TItem="CostCentreWithNavigationPropertiesDto"
+                  Class="datagrid-detail">
+            <DataGridColumns>
+                
+                <DataGridEntityActionsColumn TItem="CostCentreWithNavigationPropertiesDto" @ref="@EntityActionsColumn">
+                    <DisplayTemplate>
+                        <EntityActions TItem="CostCentreWithNavigationPropertiesDto" EntityActionsColumn="@EntityActionsColumn">
+                            <EntityAction TItem="CostCentreWithNavigationPropertiesDto"
+                                          Visible="@CanEditCostCentre"
+                                          Clicked="async () => await OpenEditCostCentreModalAsync(context)"
+                                          Text="@L["Edit"]"></EntityAction>
+                            <EntityAction TItem="CostCentreWithNavigationPropertiesDto"
+                                          Visible="@CanDeleteCostCentre"
+                                          Clicked="() => DeleteCostCentreAsync(context)"
+                                          ConfirmationMessage="@(()=> L["DeleteConfirmationMessage"])"
+                                          Text="@L["Delete"]"></EntityAction>
+                        </EntityActions>
+                    </DisplayTemplate>
+                </DataGridEntityActionsColumn>
+                </DataGridColumns>
+        </DataGrid> *@
+    </CardBody>
+</Card>
+
+
+
+
+
+<style>
+    h1 {
+        text-align: center;
+    }
+
+    hr {
+        border: 1px solid #ccc; /* Gray color */
+        margin: 20px 0; /* Add some margin for spacing */
+    }
+</style>
+@code {
+    [Parameter]
+    public String id { get; set; }
+    [Parameter]
+    public String costCentreReference { get; set; }
+    [Parameter]
+    public String costCentreName { get; set; }
+    [Parameter]
+    public String isDisabled { get; set; }
+    [Parameter]
+    public String branchName { get; set; }
+    [Parameter]
+    public String concurrencyStamp { get; set; }
+}
+

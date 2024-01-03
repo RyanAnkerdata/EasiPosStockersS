@@ -11,6 +11,8 @@ using Volo.Abp.AspNetCore.Components.Web.Theming.PageToolbars;
 using EasiPosStockers.Products;
 using EasiPosStockers.Permissions;
 using EasiPosStockers.Shared;
+using EasiPosStockers.CostCentres;
+using Excubo.Generators.Blazor.ExperimentalDoNotUseYet;
 
 
 namespace EasiPosStockers.Blazor.Pages
@@ -70,6 +72,7 @@ namespace EasiPosStockers.Blazor.Pages
             await SetToolbarItemsAsync();
             await SetBreadcrumbItemsAsync();
             await SetPermissionsAsync();
+            await GetAllCostCentresAsync();
             
         }
 
@@ -98,9 +101,7 @@ namespace EasiPosStockers.Blazor.Pages
             CanEditProduct = await AuthorizationService
                             .IsGrantedAsync(EasiPosStockersPermissions.Products.Edit);
             CanDeleteProduct = await AuthorizationService
-                            .IsGrantedAsync(EasiPosStockersPermissions.Products.Delete);
-                            
-                            
+                            .IsGrantedAsync(EasiPosStockersPermissions.Products.Delete);    
         }
 
         private async Task GetProductsAsync()
@@ -108,8 +109,10 @@ namespace EasiPosStockers.Blazor.Pages
             Filter.MaxResultCount = PageSize;
             Filter.SkipCount = (CurrentPage - 1) * PageSize;
             Filter.Sorting = CurrentSorting;
-
+            Console.WriteLine("About to execute GetListAsync Function!\n\nKind regards!");
             var result = await ProductsAppService.GetListAsync(Filter);
+            Console.WriteLine("Finished executing GetListAsync Function!\n\nKind regards!");
+
             ProductList = result.Items;
             TotalCount = (int)result.TotalCount;
         }
@@ -143,11 +146,12 @@ namespace EasiPosStockers.Blazor.Pages
         private async Task OpenCreateProductModalAsync()
         {
             SelectedCostCentres = new List<LookupDto<Guid>>();
-            
 
-            NewProduct = new ProductCreateDto{
-                
-                
+
+            NewProduct = new ProductCreateDto
+            {
+
+
             };
             await NewProductValidations.ClearAll();
             await CreateProductModal.Show();
@@ -168,6 +172,9 @@ namespace EasiPosStockers.Blazor.Pages
             
             EditingProductId = product.Product.Id;
             EditingProduct = ObjectMapper.Map<ProductDto, ProductUpdateDto>(product.Product);
+
+            // KEY TO THE EDIT MODAL REMEMBERING THE SELECTED COST CENTRES FROM THE CREATE MODAL
+
             SelectedCostCentres = product.CostCentres.Select(a => new LookupDto<Guid>{ Id = a.Id, DisplayName = a.CostCentreName}).ToList();
 
             await EditingProductValidations.ClearAll();
@@ -176,12 +183,11 @@ namespace EasiPosStockers.Blazor.Pages
 
         private async Task DeleteProductAsync(ProductWithNavigationPropertiesDto input)
         {
+            input.CostCentres = new List<CostCentreDto>();
             await ProductsAppService.DeleteAsync(input.Product.Id);
             await GetProductsAsync();
         }
 
-
-        // Original CreateProductAsync()
         private async Task CreateProductAsync()
         {
             try
@@ -191,8 +197,6 @@ namespace EasiPosStockers.Blazor.Pages
                     return;
                 }
                 NewProduct.CostCentreIds = SelectedCostCentres.Select(x => x.Id).ToList();
-
-
                 await ProductsAppService.CreateAsync(NewProduct);
                 await GetProductsAsync();
                 await CloseCreateProductModalAsync();
@@ -202,37 +206,13 @@ namespace EasiPosStockers.Blazor.Pages
                 await HandleErrorAsync(ex);
             }
         }
-
-        // Adjusted CreateProductAsync() Method
-        private async Task CreateProductAsync(Dictionary<Guid, bool> costCentreSelections)
-        {
-            try
-            {
-                if (await NewProductValidations.ValidateAll() == false)
-                {
-                    return;
-                }
-                
-                NewProduct.CostCentreIds = costCentreSelections
-                    .Where(pair => pair.Value) // Filter where the value is true
-                    .Select(pair => pair.Key)  // Select the Guid (the key in the dictionary)
-                    .ToList();
-
-                await ProductsAppService.CreateAsync(NewProduct);
-                await GetProductsAsync();
-                await CloseCreateProductModalAsync();
-            }
-            catch (Exception ex)
-            {
-                await HandleErrorAsync(ex);
-            }
-        }
-
 
         private async Task CloseEditProductModalAsync()
         {
             await EditProductModal.Hide();
         }
+
+
 
         private async Task UpdateProductAsync()
         {
@@ -242,18 +222,66 @@ namespace EasiPosStockers.Blazor.Pages
                 {
                     return;
                 }
-                EditingProduct.CostCentreIds = SelectedCostCentres.Select(x => x.Id).ToList();
 
+                EditingProduct.CostCentreIds = SelectedCostCentres.Select(x => x.Id).ToList();
+                Console.WriteLine($"\n\nNumber 1...\n\n");
 
                 await ProductsAppService.UpdateAsync(EditingProductId, EditingProduct);
+                Console.WriteLine($"\n\nNumber 2...\n\n");
+
+                await GetProductsAsync();
+                await EditProductModal.Hide();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"\n\nThe following EXCEPTION was thrown bad boy:\n\n{ex}\n\n");
+                await HandleErrorAsync(ex);
+            }
+        }
+
+
+        /*private async Task UpdateProductAsync()
+        {
+            try
+            {
+                if (await EditingProductValidations.ValidateAll() == false)
+                {
+                    return;
+                }
+                Console.WriteLine("\n\n\n1\n\n\n");
+                Console.WriteLine($"SelectedCostCentres:");
+                foreach (var item in SelectedCostCentres)
+                {
+                    Console.WriteLine($"CostCentreId = {item.Id}");
+                }
+                Console.WriteLine("\n\n\nEND SELECTED COST CENTRES\n\n\n");
+
+
+                EditingProduct.CostCentreIds = SelectedCostCentres.Select(x => x.Id).ToList();
+
+                // if cost centre id in productcostcentres table is not in the costcentreids list, remove it from the productcostcentres table
+
+                Console.WriteLine("\n\n\n1\n\n\n");
+                Console.WriteLine($"CostCentreIds:");
+                foreach (var item in EditingProduct.CostCentreIds)
+                {
+                    Console.WriteLine($"CostCentreId = {item}");
+                }
+                Console.WriteLine("\n\n\nEND\n\n\n");
+
+                //remove the cost centres from the ProductCostCentres table
+                //await ProductsAppService.RemoveCostCentresFromProductAsync(EditingProductId, EditingProduct.CostCentreIds);
+
+                await ProductsAppService.UpdateAsync(EditingProductId, EditingProduct); // Problem Statement - This is not updating the CostCentres
                 await GetProductsAsync();
                 await EditProductModal.Hide();                
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"\n\nThe following EXCEPTION was thrown bad boy:\n\n{ex}\n\n");
                 await HandleErrorAsync(ex);
             }
-        }
+        }*/
 
         private void OnSelectedCreateTabChanged(string name)
         {
@@ -283,6 +311,7 @@ namespace EasiPosStockers.Blazor.Pages
         
         private async Task GetAllCostCentresAsync() // Added
         {
+            SelectedCostCentres.Clear();
             CostCentres = (await ProductsAppService.GetCostCentreLookupAsync(new LookupRequestDto { Filter = "" })).Items;
         }
 
@@ -310,10 +339,5 @@ namespace EasiPosStockers.Blazor.Pages
                 DisplayName = SelectedCostCentreText
             });
         }
-
-
-
-
-
     }
 }

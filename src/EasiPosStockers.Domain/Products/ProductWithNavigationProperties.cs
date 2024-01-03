@@ -9,9 +9,20 @@ namespace EasiPosStockers.Products
     {
         public Product Product { get; set; } = null!;
 
-        
-
         public List<CostCentre> CostCentres { get; set; } = null!;
-        
+
+
+        public bool HasCostCentre(Guid costCentreId)
+        {
+            foreach (CostCentre costCentre in CostCentres)
+            {
+
+                if (costCentre.Id == costCentreId)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }

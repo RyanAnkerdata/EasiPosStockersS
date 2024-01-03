@@ -39,6 +39,7 @@ namespace EasiPosStockers.Products
 
         public virtual async Task<PagedResultDto<ProductWithNavigationPropertiesDto>> GetListAsync(GetProductsInput input)
         {
+            Console.WriteLine("We made it to GetListAsync in ProductsAppService\n\n");
             var totalCount = await _productRepository.GetCountAsync(input.FilterText, input.Description, input.ProductName, input.CostCentreId);
             var items = await _productRepository.GetListWithNavigationPropertiesAsync(input.FilterText, input.Description, input.ProductName, input.CostCentreId, input.Sorting, input.MaxResultCount, input.SkipCount);
 
@@ -85,25 +86,28 @@ namespace EasiPosStockers.Products
         [Authorize(EasiPosStockersPermissions.Products.Create)]
         public virtual async Task<ProductDto> CreateAsync(ProductCreateDto input)
         {
-
-            var product = await _productManager.CreateAsync(
-            input.CostCentreIds, input.Description, input.ProductName
-            );
-
+            var product = await _productManager.CreateAsync(input.CostCentreIds, input.Description, input.ProductName);
             return ObjectMapper.Map<Product, ProductDto>(product);
         }
+
 
         [Authorize(EasiPosStockersPermissions.Products.Edit)]
         public virtual async Task<ProductDto> UpdateAsync(Guid id, ProductUpdateDto input)
         {
-
-            var product = await _productManager.UpdateAsync(
-            id,
-            input.CostCentreIds, input.Description, input.ProductName, input.ConcurrencyStamp
-            );
-
-            return ObjectMapper.Map<Product, ProductDto>(product);
+            try
+            {
+                var product = await _productManager.UpdateAsync(id, input.CostCentreIds, input.Description, input.ProductName, input.ConcurrencyStamp);
+                return ObjectMapper.Map<Product, ProductDto>(product); // This is the statement that leads to the db being populated!
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("\nException Caught!\n");
+                Console.WriteLine(ex);
+                Console.WriteLine("\n\n");
+                throw;
+            }
         }
+
 
         [AllowAnonymous]
         public virtual async Task<IRemoteStreamContent> GetListAsExcelFileAsync(ProductExcelDownloadDto input)

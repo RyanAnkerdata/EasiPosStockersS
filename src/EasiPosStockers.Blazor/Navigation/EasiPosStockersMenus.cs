@@ -2,7 +2,7 @@ namespace EasiPosStockers.Blazor.Navigation;
 
 public class EasiPosStockersMenus
 {
-    private const string Prefix = "EasiPosStockers";
+    private const string Prefix = "EasiPosStock";
 
     public const string Home = Prefix + ".Home";
 
@@ -13,5 +13,4 @@ public class EasiPosStockersMenus
     public const string CostCentres = Prefix + ".CostCentres";
 
     public const string Products = Prefix + ".Products";
-
 }

@@ -79,41 +79,36 @@
                     <Field>
                         <FieldLabel>@L["IsDisabled"]</FieldLabel>
                         <Select TValue="bool?"
-		SelectedValue="@Filter.IsDisabled"
-		SelectedValueChanged="@OnIsDisabledChangedAsync">
-
-<SelectItem></SelectItem>
-<SelectItem Value="true">@L["Yes"]</SelectItem>
-<SelectItem Value="false">@L["No"]</SelectItem>
-
-</Select>                       
+		                    SelectedValue="@Filter.IsDisabled"
+		                    SelectedValueChanged="@OnIsDisabledChangedAsync">
+                                <SelectItem></SelectItem>
+                                <SelectItem Value="true">@L["Yes"]</SelectItem>
+                                <SelectItem Value="false">@L["No"]</SelectItem>
+                        </Select>                       
                     </Field>
                 </Column>
                 <Column ColumnSize="ColumnSize.Is3">
                     <Field>
                         <FieldLabel>@L["Branch"]</FieldLabel>
                         <Select TValue="Guid?"
-		SelectedValue="@Filter.BranchId"
-		SelectedValueChanged="@OnBranchIdChangedAsync">
-
-<SelectItem></SelectItem>
-
-@foreach(var item in BranchesCollection)
-{
-	<SelectItem TValue="Guid?" Value="@item.Id">
-		@item.DisplayName
-	</SelectItem>
-}
-
-</Select>                       
+		                    SelectedValue="@Filter.BranchId"
+		                    SelectedValueChanged="@OnBranchIdChangedAsync">
+                                <SelectItem></SelectItem>
+                                @foreach(var item in BranchesCollection)
+                                {
+	                                <SelectItem TValue="Guid?" Value="@item.Id">
+		                                @item.DisplayName
+	                                </SelectItem>
+                                }
+                        </Select>                       
                     </Field>
                 </Column>
             </Row>
-@*//<suite-custom-code-block-2>*@
-@*//</suite-custom-code-block-2>*@
+        @*//<suite-custom-code-block-2>*@
+        @*//</suite-custom-code-block-2>*@
         </div>
-@*//<suite-custom-code-block-3>*@
-@*//</suite-custom-code-block-3>*@
+    @*//<suite-custom-code-block-3>*@
+    @*//</suite-custom-code-block-3>*@
     </CardBody>
 </Card>
 
@@ -145,6 +140,9 @@
                                           Clicked="() => DeleteCostCentreAsync(context)"
                                           ConfirmationMessage="@(()=> L["DeleteConfirmationMessage"])"
                                           Text="@L["Delete"]"></EntityAction>
+                            <EntityAction TItem="CostCentreWithNavigationPropertiesDto"
+                                          Clicked="() => OpenCostCentreProductsAsync(context)"
+                                          Text="@L["OpenProducts"]"></EntityAction>
 @*//<suite-custom-code-block-4>*@
 @*//</suite-custom-code-block-4>*@
                         </EntityActions>
